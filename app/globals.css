@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #6c4dff;
+  --primary-hover: #5a3ef0;
+  --secondary: #8b5cf6;
+  --accent-blue: #4f7bff;
+  --accent-gold: #f5c842;
+
+  --bg-main: #f8f9ff;
+  --bg-section: #ffffff;
+  --bg-hero-glow: #eef0ff;
+  --bg-card: #ffffff;
+
+  --border: #e6e8f5;
+
+  --text-heading: #111827;
+  --text-para: #6b7280;
+  --text-light: #9ca3af;
+
+  --glow-purple: #cdbaff;
+  --glow-blue: #d9e7ff;
+  --glow-violet: #ece5ff;
+
+  --gradient: linear-gradient(135deg, #6c4dff 0%, #7b61ff 45%, #4f7bff 100%);
+
+  --shadow-card: 0 10px 40px rgba(108, 77, 255, 0.12);
+  --shadow-btn: 0 12px 30px rgba(108, 77, 255, 0.25);
+  --shadow-float: 0 20px 60px rgba(79, 123, 255, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-heading);
+  font-family: "Tajawal", sans-serif;
+  direction: rtl;
+}
+
+.btn-gradient {
+  background: var(--gradient);
+  box-shadow: var(--shadow-btn);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-gradient:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
