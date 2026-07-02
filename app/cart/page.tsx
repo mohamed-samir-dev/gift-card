@@ -7,45 +7,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingCart, ArrowRight, Zap, ShieldCheck, Tag } from "lucide-react";
 import toast from "react-hot-toast";
-import { useState } from "react";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CartPage() {
   const { items, removeFromCart, updateQty, clearCart, totalPrice } = useCart();
   const { user, token } = useAuth();
   const router = useRouter();
-  const [buying, setBuying] = useState(false);
-
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (!user || !token) {
       toast.error("سجل دخولك أولاً لإتمام الشراء");
-      router.push("/login?returnUrl=/cart");
+      router.push("/login?returnUrl=/checkout");
       return;
     }
-    setBuying(true);
-    try {
-      for (const item of items) {
-        for (let i = 0; i < item.qty; i++) {
-          const res = await fetch(`${API}/api/orders`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ productId: item.productId }),
-          });
-          if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message || "فشل الشراء");
-          }
-        }
-      }
-      clearCart();
-      toast.success("تمت جميع الطلبات بنجاح 🎉");
-      router.push("/");
-    } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "حدث خطأ");
-    } finally {
-      setBuying(false);
-    }
+    router.push("/checkout");
   };
 
   if (items.length === 0) {
@@ -183,13 +156,9 @@ export default function CartPage() {
 
             <button
               onClick={handleCheckout}
-              disabled={buying}
               className="btn-gradient w-full text-white font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm mb-4"
             >
-              {buying
-                ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                : <><Zap size={17} /> إتمام الشراء الآن</>
-              }
+              <Zap size={17} /> إتمام الشراء الآن
             </button>
 
             <div className="flex flex-col gap-2">
