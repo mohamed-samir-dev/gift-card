@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Zap, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 import { Product } from "../types";
 
 const PAGE_SIZE = 12;
@@ -51,15 +51,6 @@ export default function CardsGrid({ products, loading, currentPage, onPageChange
         }
         .cp-img-wrap img { transition: transform 0.5s ease; object-fit: cover; }
         .cp-card:hover .cp-img-wrap img { transform: scale(1.06); }
-
-        /* instant delivery badge on image */
-        .cp-instant-badge {
-          position: absolute; top: 8px; right: 8px; z-index: 2;
-          display: flex; align-items: center; gap: 3px;
-          background: rgba(108,77,255,0.88); backdrop-filter: blur(6px);
-          color: #fff; font-size: 0.6rem; font-weight: 800;
-          padding: 3px 8px; border-radius: 999px;
-        }
 
         /* ── body ── */
         .cp-body { padding: 0.7rem; display: flex; flex-direction: column; flex: 1; gap: 5px; }
@@ -177,10 +168,6 @@ export default function CardsGrid({ products, loading, currentPage, onPageChange
               <Link key={product._id} href={`/product/${product._id}`} className="cp-card">
                 <div className="cp-img-wrap">
                   <Image src={product.image || "/placeholder.webp"} alt={product.title} fill />
-                  <span className="cp-instant-badge">
-                    <Zap size={9} strokeWidth={3} />
-                    توصيل فوري
-                  </span>
                 </div>
 
                 <div className="cp-body">

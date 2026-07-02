@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 interface Product {
   _id: string;
@@ -16,17 +13,7 @@ interface Product {
   category: { name: string; slug: string };
 }
 
-export default function FeaturedProductsSection() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
-      .then((r) => r.json())
-      .then((data) => setProducts(Array.isArray(data) ? data.slice(0, 6) : []))
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
-  }, []);
+export default function FeaturedProductsSection({ products }: { products: Product[] }) {
 
   return (
     <section className="fp-section">
@@ -318,11 +305,7 @@ export default function FeaturedProductsSection() {
 
       {/* Grid */}
       <div className="fp-grid">
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="fp-skeleton" />
-            ))
-          : products.map((product, index) => (
+        {products.map((product) => (
               <Link key={product._id} href={`/product/${product._id}`} className="fp-card" style={{ textDecoration: "none" }}>
                 {/* Image */}
                 <div className="fp-img-wrap">
@@ -346,9 +329,9 @@ export default function FeaturedProductsSection() {
       </div>
 
       {/* View all */}
-      {!loading && products.length > 0 && (
+      {products.length > 0 && (
         <div className="fp-view-all-wrap">
-          <a href="#" className="fp-view-all">
+          <a href="/cards" className="fp-view-all">
             عرض كل البطاقات
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M6 8H13M6 8L9 5M6 8L9 11" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
