@@ -1,7 +1,7 @@
 .rc-page {
   min-height: 100vh;
   background: var(--bg-main);
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+  padding: clamp(1rem, 3vw, 3rem) clamp(0.75rem, 3vw, 2rem);
   font-family: "Tajawal", sans-serif;
 }
 
@@ -51,7 +51,13 @@
 }
 @media (min-width: 900px) {
   .rc-layout {
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 320px;
+  }
+}
+/* على الموبايل: الـ sidebar يجي أول */
+@media (max-width: 899px) {
+  .rc-layout > div:last-child {
+    order: -1;
   }
 }
 
@@ -174,7 +180,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .rc-methods {
     grid-template-columns: 1fr 1fr;
   }
@@ -259,6 +265,8 @@
   font-weight: 600;
   padding: 4px 0;
 }
+.rc-summary-row > span:first-child { text-align: right; }
+.rc-summary-row > span:last-child  { text-align: left; }
 .rc-summary-row.total {
   border-top: 1px solid var(--border);
   margin-top: 6px;
@@ -335,6 +343,54 @@
   gap: 1rem;
 }
 
+/* إخفاء الـ features على الموبايل */
+@media (max-width: 899px) {
+  .ws-features-desktop {
+    display: none;
+  }
+}
+
+/* title + eye button */
+.ws-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+.ws-eye-btn {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid #d4c6ff;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--primary);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.ws-eye-btn:hover {
+  background: #fff;
+}
+
+/* balance + currency جنب بعض */
+.ws-balance-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.ws-balance {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1;
+  color: #16a34a;
+}
+
 /* card */
 .ws-card {
   position: relative;
@@ -392,12 +448,6 @@
   color: var(--primary);
   box-shadow: 0 4px 16px rgba(108,77,255,0.15);
   margin: 0.3rem 0;
-}
-.ws-balance {
-  font-size: clamp(2.4rem, 6vw, 3.2rem);
-  font-weight: 900;
-  line-height: 1;
-  color: #16a34a;
 }
 .ws-currency {
   display: flex;
@@ -747,4 +797,140 @@
   .ag-actions { flex-direction: column; max-width: 100%; }
   .ag-btn-back,
   .ag-btn-login { flex: unset; width: 100%; min-width: unset; padding: 0.85rem 1rem; }
+}
+
+/* ── Transaction History ── */
+.ws-history-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: var(--text-heading);
+  font-family: "Tajawal", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.ws-history-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.ws-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.ws-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  font-family: "Tajawal", sans-serif;
+  direction: rtl;
+}
+.ws-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  margin-bottom: 1rem;
+}
+.ws-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text-para);
+  line-height: 1;
+}
+.ws-date-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+.ws-date-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-para);
+  flex: 1;
+  min-width: 120px;
+}
+.ws-date-row input[type="date"] {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-family: "Tajawal", sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ws-date-row input[type="date"]:focus {
+  border-color: var(--primary);
+}
+.ws-print-btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--gradient);
+  color: #fff;
+  font-family: "Tajawal", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.ws-print-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.ws-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.ws-table th,
+.ws-table td {
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  text-align: right;
+}
+.ws-table th {
+  background: #f3f0ff;
+  font-weight: 800;
+  color: var(--text-heading);
+}
+.ws-table tr:hover td {
+  background: #fafafa;
+}
+.ws-no-data {
+  text-align: center;
+  color: var(--text-para);
+  font-size: 0.88rem;
+  padding: 2rem 0;
 }

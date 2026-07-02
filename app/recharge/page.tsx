@@ -104,7 +104,7 @@ export default function RechargePage() {
         </div>
 
         {/* Left: wallet sidebar */}
-        <WalletSidebar user={user} wallet={wallet} />
+        <WalletSidebar user={user} wallet={wallet} token={token} />
       </div>
     </main>
   );

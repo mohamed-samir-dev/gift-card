@@ -19,6 +19,8 @@ export default function OrderSummary({ finalAmount, method, loading, error, succ
         <div className="rc-summary-row">
           <span>المبلغ المختار</span>
           <span className="rc-summary-val">{finalAmount ? <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>{finalAmount} <img src="/money-icon.webp" alt="ريال" style={{ width: 25, height: 25, objectFit: "contain" }} /></span> : "—"}</span>
+        </div>
+        <div className="rc-summary-row">
           <span>طريقة الدفع</span>
           <span className="rc-summary-val">{methodLabel ?? "—"}</span>
         </div>
