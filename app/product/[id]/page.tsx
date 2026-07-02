@@ -40,7 +40,6 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
-  const [buying, setBuying] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
 
   useEffect(() => {
@@ -97,7 +96,7 @@ export default function ProductPage() {
                 ))}
               </div> */}
             </motion.div>
-            <ProductInfo product={product} qty={qty} buying={buying} total={total} onQtyChange={setQty} onBuy={handleBuy} />
+            <ProductInfo product={product} qty={qty} buying={false} total={total} onQtyChange={setQty} onBuy={handleBuy} />
           </div>
           <div className="pd-bottom">
             {(product.description || product.details) && (
