@@ -53,10 +53,7 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
       <h1 className="pd-title">{product.title}</h1>
       {product.brief && <p className="pd-brief">{product.brief}</p>}
 
-      <div className="pd-stock-row">
-        <span className="pd-stock-label">المخزون</span>
-        <span className="pd-stock-val">{product.unlimitedStock ? '∞' : product.stock}</span>
-      </div>
+      
 
 
       <hr className="pd-divider" />
@@ -66,7 +63,7 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
           <div className="pd-price-label">السعر</div>
           <div className="pd-price-row">
             <span className="pd-price">{product.price}</span>
-            <span className="pd-currency">{product.currency}</span>
+            <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 30, height: 30, marginBottom: 3 }} />
             {qty > 1 && <span className="pd-per-unit">× {qty}</span>}
           </div>
         </div>
@@ -102,7 +99,10 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
           <span className="pd-total-label">الإجمالي</span>
           <span className="pd-total-note">شامل جميع الرسوم</span>
         </div>
-        <span className="pd-total-val">{total} {product.currency}</span>
+        <span className="pd-total-val" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {total}
+          <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 30, height: 30 }} />
+        </span>
       </div>
 
       <button className="pd-buy-btn" onClick={onBuy} disabled={buying || !inStock}>

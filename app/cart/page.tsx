@@ -103,7 +103,7 @@ export default function CartPage() {
               <div className="flex-1 min-w-0 flex flex-col">
                 <p className="font-bold text-sm sm:text-base truncate mb-1" style={{ color: "var(--text-heading)" }}>{item.title}</p>
                 <p className="text-xs mb-3" style={{ color: "var(--text-para)" }}>
-                  سعر الوحدة: <span className="font-bold text-[#6c4dff]">{item.price.toFixed(2)} {item.currency}</span>
+                  سعر الوحدة: <span className="font-bold text-[#6c4dff]" style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>{item.price.toFixed(2)} <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 20, height: 20 }} /></span>
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 rounded-xl overflow-hidden" style={{ border: "1.5px solid var(--border)" }}>
@@ -132,10 +132,11 @@ export default function CartPage() {
               </div>
 
               <div className="text-left shrink-0 self-start sm:self-auto">
-                <p className="text-lg font-black" style={{ color: "var(--primary)" }}>
+                <p className="text-lg font-black" style={{ color: "var(--primary)", display: "flex", alignItems: "center", gap: 4 }}>
                   {(item.price * item.qty).toFixed(2)}
+                  <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 25, height: 25 }} />
                 </p>
-                <p className="text-xs font-semibold" style={{ color: "var(--text-para)" }}>{item.currency}</p>
+                <p className="text-xs font-semibold" style={{ color: "var(--text-para)", display: "none" }}>{item.currency}</p>
               </div>
             </div>
           ))}
@@ -164,12 +165,12 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span style={{ color: "var(--text-para)" }}>المجموع الفرعي</span>
-                <span className="font-bold" style={{ color: "var(--text-heading)" }}>{totalPrice.toFixed(2)} SAR</span>
+                <span className="font-bold" style={{ color: "var(--text-heading)", display: "inline-flex", alignItems: "center", gap: 3 }}>{totalPrice.toFixed(2)} <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 25, height: 25 }} /></span>
               </div>
               <div className="h-px" style={{ background: "var(--border)" }} />
               <div className="flex justify-between">
                 <span className="font-bold" style={{ color: "var(--text-heading)" }}>الإجمالي</span>
-                <span className="text-xl font-black" style={{ color: "var(--primary)" }}>{totalPrice.toFixed(2)} SAR</span>
+                <span className="text-xl font-black" style={{ color: "var(--primary)", display: "inline-flex", alignItems: "center", gap: 4 }}>{totalPrice.toFixed(2)} <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 25, height: 25 }} /></span>
               </div>
             </div>
 

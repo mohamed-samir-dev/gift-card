@@ -101,7 +101,9 @@ export default function CardsGrid({ products, loading, currentPage, onPageChange
           font-size: clamp(1.05rem, 3vw, 1.25rem); font-weight: 900;
           background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           white-space: nowrap; line-height: 1;
+          display: flex; align-items: center; gap: 4px;
         }
+        .cp-currency-icon { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
         .cp-price-label { font-size: 0.58rem; color: var(--text-light); font-weight: 600; }
         .cp-btn {
           display: inline-flex; align-items: center; gap: 4px;
@@ -182,7 +184,10 @@ export default function CardsGrid({ products, loading, currentPage, onPageChange
 
                   <div className="cp-footer">
                     <div className="cp-price-wrap">
-                      <span className="cp-price">{product.price} {product.currency}</span>
+                      <span className="cp-price">
+                        {product.price}
+                        <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" />
+                      </span>
                     </div>
                     <span className="cp-btn">
                       <ShoppingBag size={13} strokeWidth={2.5} />

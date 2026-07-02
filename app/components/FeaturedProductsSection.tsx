@@ -319,7 +319,10 @@ export default function FeaturedProductsSection({ products }: { products: Produc
                   {product.brief && <p className="fp-brief">{product.brief}</p>}
                   <div className="fp-footer">
                     <div>
-                      <div className="fp-price">{product.price} {product.currency}</div>
+                      <div className="fp-price" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        {product.price}
+                        <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 25, height: 25}} />
+                      </div>
                     </div>
                     <span className="fp-btn">اشتري</span>
                   </div>
