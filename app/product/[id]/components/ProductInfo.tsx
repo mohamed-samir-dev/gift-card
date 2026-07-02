@@ -33,9 +33,9 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
   return (
     <motion.div
       className="pd-info"
-      initial={{ opacity: 0, x: -30 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
     >
       <div className="pd-cat-row">
         {product.category?.name && (

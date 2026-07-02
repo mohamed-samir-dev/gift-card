@@ -51,11 +51,8 @@ export default function ProductPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleBuy = async () => {
-    setBuying(true);
-    await new Promise((r) => setTimeout(r, 1000));
+  const handleBuy = () => {
     toast.success("تم إضافة البطاقة بنجاح! 🎉");
-    setBuying(false);
   };
 
   if (loading) return <><style>{productStyles}</style><LoadingSkeleton /></>;
@@ -85,7 +82,7 @@ export default function ProductPage() {
             رجوع
           </motion.button>
           <div className="pd-grid">
-            <motion.div className="pd-img-col" initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+            <motion.div className="pd-img-col" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
               <div className="pd-img-wrap">
                 <Image src={product.image || "/placeholder.webp"} alt={product.title} fill style={{ objectFit: "cover" }} priority />
                 <div className="pd-img-overlay" />
@@ -104,7 +101,7 @@ export default function ProductPage() {
           </div>
           <div className="pd-bottom">
             {(product.description || product.details) && (
-              <motion.div className="pd-desc-card" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.3 }}>
+              <motion.div className="pd-desc-card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
                 <h2 className="pd-section-title">
                   <span className="pd-section-icon"><FileText size={15} /></span>
                   تفاصيل المنتج
@@ -132,7 +129,7 @@ export default function ProductPage() {
                 )}
               </motion.div>
             )}
-            <motion.div className="pd-how-card" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.38 }}>
+            <motion.div className="pd-how-card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
               <h2 className="pd-section-title">
                 <span className="pd-section-icon"><BookOpen size={15} /></span>
                 طريقة الاستخدام
