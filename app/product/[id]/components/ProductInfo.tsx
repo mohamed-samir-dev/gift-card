@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Tag, Minus, Plus, Zap, CheckCircle, Heart, Sparkles } from "lucide-react";
+import { Tag, Minus, Plus, Zap, CheckCircle, Heart, Sparkles, ShoppingCart } from "lucide-react";
 import { Product } from "../types";
+import { useCart } from "../../../context/CartContext";
+import toast from "react-hot-toast";
 
 interface Props {
   product: Product;
@@ -15,6 +17,18 @@ interface Props {
 
 export default function ProductInfo({ product, qty, buying, total, onQtyChange, onBuy }: Props) {
   const inStock = product.unlimitedStock || product.stock > 0;
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({
+      productId: product._id,
+      title: product.title,
+      image: product.image || "",
+      price: product.price,
+      currency: product.currency,
+    }, qty);
+    toast.success("تمت الإضافة للسلة 🛒");
+  };
 
   return (
     <motion.div
@@ -38,6 +52,11 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
 
       <h1 className="pd-title">{product.title}</h1>
       {product.brief && <p className="pd-brief">{product.brief}</p>}
+
+      <div className="pd-stock-row">
+        <span className="pd-stock-label">المخزون</span>
+        <span className="pd-stock-val">{product.unlimitedStock ? '∞' : product.stock}</span>
+      </div>
 
 
       <hr className="pd-divider" />
@@ -98,9 +117,9 @@ export default function ProductInfo({ product, qty, buying, total, onQtyChange, 
         )}
       </button>
 
-      <button className="pd-wishlist-btn">
-        <Heart size={16} />
-        أضف للمفضلة
+      <button className="pd-wishlist-btn" onClick={handleAddToCart} disabled={!inStock}>
+        <ShoppingCart size={16} />
+        أضف للسلة
       </button>
     </motion.div>
   );

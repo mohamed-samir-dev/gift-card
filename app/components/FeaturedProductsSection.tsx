@@ -207,6 +207,10 @@ export default function FeaturedProductsSection() {
           padding-top: 10px;
           border-top: 1px solid var(--border);
         }
+        @media (max-width: 350px) {
+          .fp-footer { flex-direction: column; align-items: stretch; gap: 6px; }
+          .fp-btn { justify-content: center; }
+        }
         .fp-price {
           font-size: clamp(1rem, 3vw, 1.2rem);
           font-weight: 900;

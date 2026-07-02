@@ -189,7 +189,7 @@ export default function HeroSection() {
               </Link>
 
               <Link
-                href="/offers"
+                href="/recharge"
                 style={{
                   color: "#4c1d95",
                   fontWeight: 700,
@@ -203,7 +203,7 @@ export default function HeroSection() {
                   whiteSpace: "nowrap",
                 }}
               >
-                العروض الحالية ←
+                اشحن رصيدك ←
               </Link>
             </div>
 

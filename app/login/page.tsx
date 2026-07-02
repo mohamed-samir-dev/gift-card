@@ -32,6 +32,7 @@ function AuthPage() {
   const { login } = useAuth();
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<"login" | "register">("login");
+  const returnUrl = searchParams?.get("returnUrl") || "/";
 
   useEffect(() => {
     if (searchParams?.get("tab") === "register") setTab("register");
@@ -57,7 +58,7 @@ function AuthPage() {
       if (!res.ok) throw new Error(data.message || "خطأ في تسجيل الدخول");
       login(data.token, data.user);
       toast.success(`أهلاً ${data.user.name} 👋`);
-      router.push("/");
+      router.push(returnUrl);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "حدث خطأ");
     } finally {
@@ -80,7 +81,7 @@ function AuthPage() {
       if (!res.ok) throw new Error(data.message || "خطأ في إنشاء الحساب");
       login(data.token, data.user);
       toast.success("تم إنشاء حسابك بنجاح 🎉");
-      router.push("/");
+      router.push(returnUrl);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "حدث خطأ");
     } finally {

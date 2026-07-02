@@ -1,12 +1,15 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
+import { useCart } from "./CartContext";
+
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 interface AuthUser { _id: string; name: string; email: string; role: string; }
 interface AuthContextType {
   user: AuthUser | null;
   token: string | null;
-  login: (token: string, user: AuthUser) => void;
+  login: (token: string, user: AuthUser) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -17,23 +20,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { loadUserCart, resetCartState } = useCart();
+  const initializedRef = useRef(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount and restore cart from DB
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     const savedToken = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
+      loadUserCart(savedToken);
     }
     setIsLoading(false);
-  }, []);
+  }, [loadUserCart]);
 
-  const login = (newToken: string, newUser: AuthUser) => {
+  const login = async (newToken: string, newUser: AuthUser) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("user", JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
+    await loadUserCart(newToken);
   };
 
   const logout = () => {
@@ -41,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("user");
     setToken(null);
     setUser(null);
+    resetCartState();
   };
 
   return (
