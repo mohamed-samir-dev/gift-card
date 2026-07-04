@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./components/Providers";
-import Navbar from "./components/Navbar";
+import RootContent from "./components/RootContent";
 
 export const metadata: Metadata = {
   title: "كارد زون - كل البطاقات الرقمية في مكان واحد",
@@ -20,8 +20,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
-          <Navbar />
-          {children}
+          <RootContent>{children}</RootContent>
         </Providers>
       </body>
     </html>
