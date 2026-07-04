@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Tag, Minus, Plus, Zap, CheckCircle, Sparkles, ShoppingCart } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
@@ -13,9 +14,16 @@ export default function ProductClient({ product }: { product: Product }) {
   const inStock = product.unlimitedStock || product.stock > 0;
   const total = (product.price * qty).toFixed(2);
 
+  const router = useRouter();
+
   const handleAddToCart = () => {
     addToCart({ productId: product._id, title: product.title, image: product.image || "", price: product.price, currency: product.currency }, qty);
     toast.success("تمت الإضافة للسلة 🛒");
+  };
+
+  const handleBuyNow = () => {
+    addToCart({ productId: product._id, title: product.title, image: product.image || "", price: product.price, currency: product.currency }, qty);
+    router.push("/cart");
   };
 
   return (
@@ -63,7 +71,7 @@ export default function ProductClient({ product }: { product: Product }) {
         </span>
       </div>
 
-      <button className="pd-buy-btn" onClick={() => toast.success("تم إضافة البطاقة بنجاح! 🎉")} disabled={!inStock}>
+      <button className="pd-buy-btn" onClick={handleBuyNow} disabled={!inStock}>
         <Zap size={19} />
         {inStock ? "اشتري الآن" : "نفذ المخزون"}
         {inStock && <CheckCircle size={17} />}

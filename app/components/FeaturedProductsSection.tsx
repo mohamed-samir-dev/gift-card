@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCart } from "../context/CartContext";
 
 interface Product {
   _id: string;
@@ -14,6 +18,20 @@ interface Product {
 }
 
 export default function FeaturedProductsSection({ products }: { products: Product[] }) {
+  const { addToCart } = useCart();
+  const router = useRouter();
+
+  function handleBuy(e: React.MouseEvent, product: Product) {
+    e.preventDefault();
+    addToCart({
+      productId: product._id,
+      title: product.title,
+      image: product.image || "/placeholder.webp",
+      price: product.price,
+      currency: product.currency,
+    });
+    router.push("/cart");
+  }
 
   return (
     <section className="fp-section">
@@ -324,7 +342,7 @@ export default function FeaturedProductsSection({ products }: { products: Produc
                         <img src="/money-icon.webp" alt="ريال" className="cp-currency-icon" style={{ width: 25, height: 25}} />
                       </div>
                     </div>
-                    <span className="fp-btn">اشتري</span>
+                    <button className="fp-btn" onClick={(e) => handleBuy(e, product)}>اشتري</button>
                   </div>
                 </div>
               </Link>
