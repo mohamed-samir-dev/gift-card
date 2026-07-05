@@ -25,11 +25,6 @@ const categories = [
   { label: "Steam", href: "/cards" },
 ];
 
-const features = [
-  { icon: Zap, title: "توصيل فوري", desc: "استلم بطاقتك في ثوانٍ بعد الدفع" },
-  { icon: ShieldCheck, title: "أمان 100%", desc: "جميع المعاملات مشفرة وآمنة" },
-  { icon: HeadphonesIcon, title: "دعم 24/7", desc: "فريقنا متاح على مدار الساعة" },
-];
 
 export default function Footer() {
   return (
@@ -277,23 +272,6 @@ export default function Footer() {
       `}</style>
 
       <footer className="footer-root">
-
-        {/* ── Features bar ── */}
-        <div className="footer-features">
-          <div className="footer-features-inner">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="footer-feat-item">
-                <div className="footer-feat-icon">
-                  <Icon size={20} color="#a78bfa" strokeWidth={2} />
-                </div>
-                <div>
-                  <div className="footer-feat-title">{title}</div>
-                  <div className="footer-feat-desc">{desc}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* ── Main grid ── */}
         <div className="footer-main">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Eye, EyeOff, Wallet2, TrendingDown, TrendingUp, Zap, AlertTriangle, History } from "lucide-react";
 import { Wallet } from "../types";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -11,8 +12,21 @@ interface Transaction {
   _id: string;
   type: "deposit" | "purchase" | "refund" | "adjustment";
   amount: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  status: "pending" | "completed" | "failed";
   note?: string;
   createdAt: string;
+  payment?: {
+    gateway: string;
+    transactionId?: string;
+    invoiceId?: string;
+    status: string;
+    currency: string;
+  };
+  order?: {
+    orderNumber: string;
+  };
 }
 
 interface Props {
@@ -21,11 +35,25 @@ interface Props {
   token: string | null;
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  deposit:    "شحن",
-  purchase:   "شراء",
-  refund:     "استرداد",
-  adjustment: "تعديل",
+const TYPE_LABEL: Record<string, { label: string; icon: string }> = {
+  deposit:    { label: "شحن",      icon: "⬆️" },
+  purchase:   { label: "شراء",     icon: "🛒" },
+  refund:     { label: "استرداد",  icon: "↩️" },
+  adjustment: { label: "تعديل",   icon: "⚙️" },
+};
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+  completed: { label: "ناجحة",  color: "#16a34a", bg: "#f0fdf4" },
+  failed:    { label: "فاشلة",  color: "#dc2626", bg: "#fff0f0" },
+  pending:   { label: "معلقة",  color: "#d97706", bg: "#fffbeb" },
+};
+
+const GATEWAY_LABEL: Record<string, string> = {
+  moyasar:  "مويسر",
+  paypal:   "باي بال",
+  stripe:   "سترايب",
+  manual:   "يدوي",
+  wallet:   "محفظة",
 };
 
 export default function WalletSidebar({ user, wallet, token }: Props) {
@@ -88,57 +116,92 @@ export default function WalletSidebar({ user, wallet, token }: Props) {
       <div className="ws-card">
         <span className="ws-blob ws-blob-1" />
         <span className="ws-blob ws-blob-2" />
-
         <div className="ws-inner">
           <div className="ws-title-row">
-            <p className="ws-title">رصيد محفظتك</p>
+            <p className="ws-title">رصيدك</p>
             <button className="ws-eye-btn" onClick={() => setHidden(h => !h)} aria-label="إخفاء الرصيد">
-              {hidden ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              )}
+              {hidden ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
-
-          <div className="ws-icon-ring">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="3" />
-              <path d="M16 12h.01" />
-              <path d="M2 10h20" />
-            </svg>
-          </div>
-
           <div className="ws-balance-row">
             <div className="ws-balance">
               {hidden ? "••••" : (wallet ? wallet.balance.toLocaleString("ar-SA") : "٠")}
             </div>
-            <div className="ws-currency">
-              <img src="/money-icon.webp" alt="ريال" width={30} height={30}
-                style={{ objectFit: "contain" }} />
-            </div>
+            <img src="/money-icon.webp" alt="ريال" width={24} height={24}
+              style={{ objectFit: "contain" }} />
           </div>
         </div>
       </div>
 
+      {/* Info cards */}
+      <div className="ws-info-strip">
+
+        <div className="ws-info-item">
+          <div className="ws-info-icon-wrap" style={{background:"#eff6ff"}}>
+            <Wallet2 size={16} color="#2563eb" />
+          </div>
+          <div className="ws-info-body">
+            <span className="ws-info-label">رصيد المحفظة</span>
+            <span className="ws-info-val" style={{color:"#2563eb"}}>
+              {hidden ? "••••" : (wallet ? wallet.balance.toLocaleString("ar-SA") : "٠")} ريال
+            </span>
+            <span className="ws-info-sub">
+              آخر تحديث · {wallet
+                ? new Date(wallet.updatedAt ?? wallet.createdAt ?? Date.now()).toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})
+                : "—"}
+            </span>
+          </div>
+        </div>
+
+        <div className="ws-info-divider" />
+
+        <div className="ws-info-item">
+          <div className="ws-info-icon-wrap" style={{background:"#f0fdf4"}}>
+            <TrendingDown size={16} color="#16a34a" />
+          </div>
+          <div className="ws-info-body">
+            <span className="ws-info-label">الحد الأدنى</span>
+            <span className="ws-info-val" style={{color:"#16a34a"}}>10 ريال</span>
+            <span className="ws-info-sub">أقل مبلغ للشحن</span>
+          </div>
+        </div>
+
+        <div className="ws-info-divider" />
+
+        <div className="ws-info-item">
+          <div className="ws-info-icon-wrap" style={{background:"#fdf4ff"}}>
+            <TrendingUp size={16} color="#9333ea" />
+          </div>
+          <div className="ws-info-body">
+            <span className="ws-info-label">الحد الأقصى</span>
+            <span className="ws-info-val" style={{color:"#9333ea"}}>5,000 ريال</span>
+            <span className="ws-info-sub">أقصى مبلغ للعملية</span>
+          </div>
+        </div>
+
+      </div>
+
+      {/* وقت الإضافة — inline message */}
+      <div className="ws-instant-msg">
+        <div className="ws-instant-dot" />
+        <Zap size={13} className="ws-instant-zap" />
+        <span>وقت الإضافة</span>
+        <strong>فوري</strong>
+        <span className="ws-instant-sep">·</span>
+        <span className="ws-instant-desc">بعد نجاح عملية الدفع</span>
+      </div>
+
+      {/* تنبيه */}
+      <div className="ws-notice">
+        <AlertTriangle size={15} style={{flexShrink:0, marginTop:1}} />
+        <p className="ws-notice-text">
+          لا يمكن استرجاع الرصيد إلى البطاقة بعد إضافته إلى المحفظة.
+        </p>
+      </div>
+
       {/* زرار سجل المعاملات */}
       <button className="ws-history-btn" onClick={() => setShowModal(true)}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 8v4l3 3"/>
-          <path d="M3.05 11a9 9 0 1 1 .5 4"/>
-          <path d="M3 3v5h5"/>
-        </svg>
+        <History size={15} />
         سجل المعاملات
       </button>
 
@@ -180,28 +243,76 @@ export default function WalletSidebar({ user, wallet, token }: Props) {
               ) : filtered.length === 0 ? (
                 <p className="ws-no-data">لا توجد معاملات في هذه الفترة</p>
               ) : (
+                <div className="ws-table-wrap">
                 <table className="ws-table">
                   <thead>
                     <tr>
                       <th>التاريخ</th>
                       <th>النوع</th>
                       <th>المبلغ</th>
-                      <th>البيان</th>
+                      <th>قبل</th>
+                      <th>بعد</th>
+                      <th>طريقة الدفع</th>
+                      <th>رقم العملية</th>
+                      <th>الحالة</th>
+                      <th>بيان</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map(t => (
-                      <tr key={t._id}>
-                        <td>{new Date(t.createdAt).toLocaleDateString("ar-SA")}</td>
-                        <td>{TYPE_LABEL[t.type] ?? t.type}</td>
-                        <td style={{color: t.amount > 0 ? "#16a34a" : "#dc2626", fontWeight:800}}>
-                          {t.amount > 0 ? "+" : ""}{t.amount.toLocaleString("ar-SA")}
-                        </td>
-                        <td>{t.note || "—"}</td>
-                      </tr>
-                    ))}
+                    {filtered.map(t => {
+                      const typeInfo = TYPE_LABEL[t.type] ?? { label: t.type, icon: "•" };
+                      const statusInfo = STATUS_CONFIG[t.status] ?? STATUS_CONFIG.pending;
+                      const gateway = t.payment?.gateway
+                        ? (GATEWAY_LABEL[t.payment.gateway] ?? t.payment.gateway)
+                        : t.order ? "محفظة" : "—";
+                      const txRef = t.payment?.transactionId || t.payment?.invoiceId
+                        || t.order?.orderNumber || "—";
+                      return (
+                        <tr key={t._id}>
+                          <td style={{whiteSpace:"nowrap"}}>
+                            {new Date(t.createdAt).toLocaleDateString("ar-SA")}
+                            <br/>
+                            <span style={{fontSize:"0.7rem",color:"#999"}}>
+                              {new Date(t.createdAt).toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})}
+                            </span>
+                          </td>
+                          <td>
+                            <span style={{display:"flex",alignItems:"center",gap:4}}>
+                              <span>{typeInfo.icon}</span>
+                              <span>{typeInfo.label}</span>
+                            </span>
+                          </td>
+                          <td style={{color: t.amount > 0 ? "#16a34a" : "#dc2626", fontWeight:800, whiteSpace:"nowrap"}}>
+                            {t.amount > 0 ? "+" : ""}{t.amount.toLocaleString("ar-SA")}
+                          </td>
+                          <td style={{color:"#666",whiteSpace:"nowrap"}}>{t.balanceBefore?.toLocaleString("ar-SA") ?? "—"}</td>
+                          <td style={{fontWeight:700,whiteSpace:"nowrap"}}>{t.balanceAfter?.toLocaleString("ar-SA") ?? "—"}</td>
+                          <td>{gateway}</td>
+                          <td style={{fontSize:"0.72rem",color:"#555",maxWidth:120,wordBreak:"break-all"}}>
+                            {txRef}
+                          </td>
+                          <td>
+                            <span style={{
+                              display:"inline-block",
+                              padding:"2px 10px",
+                              borderRadius:999,
+                              fontSize:"0.72rem",
+                              fontWeight:800,
+                              color: statusInfo.color,
+                              background: statusInfo.bg,
+                              border: `1px solid ${statusInfo.color}33`,
+                              whiteSpace:"nowrap"
+                            }}>
+                              {statusInfo.label}
+                            </span>
+                          </td>
+                          <td style={{color:"#777",fontSize:"0.8rem"}}>{t.note || "—"}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
+                </div>
               )}
             </div>
           </div>

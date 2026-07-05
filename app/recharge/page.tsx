@@ -49,6 +49,8 @@ export default function RechargePage() {
 
   const handleRecharge = async () => {
     if (!finalAmount || finalAmount <= 0) return setError("اختر أو أدخل مبلغاً صحيحاً");
+    if (finalAmount < 10) return setError("الحد الأدنى للشحن هو 10 ريال");
+    if (finalAmount > 5000) return setError("الحد الأقصى للشحن هو 5000 ريال");
     if (!method) return setError("اختر طريقة الدفع");
     setError("");
     setLoading(true);

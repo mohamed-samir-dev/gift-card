@@ -2,6 +2,8 @@ export interface Wallet {
   balance: number;
   totalRecharge: number;
   totalSpent: number;
+  updatedAt?: string;
+  createdAt?: string;
 }
 
 export interface PaymentMethod {

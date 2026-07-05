@@ -33,7 +33,7 @@ export default function OrderSummary({ finalAmount, method, loading, error, succ
       <button
         className="rc-submit"
         onClick={onSubmit}
-        disabled={loading || !finalAmount || !method}
+        disabled={loading || !finalAmount || !method || finalAmount < 10 || finalAmount > 5000}
       >
         {loading ? "⏳ جاري الشحن..." : "⚡ اشحن الآن"}
       </button>
