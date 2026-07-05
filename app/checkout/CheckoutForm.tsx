@@ -3,7 +3,7 @@
 import Image from "next/image";
 import {
   User, Phone, MapPin, Home, Building2, Hash,
-  CreditCard, Truck, ShieldCheck, Zap,
+  CreditCard, Truck, ShieldCheck, Zap, Wallet,
 } from "lucide-react";
 import { FormData } from "./types";
 import { CartItem } from "../context/CartContext";
@@ -120,18 +120,52 @@ export default function CheckoutForm({ items, totalPrice, form, setForm, errors,
             </div>
             <h2 className="font-black text-base" style={{ color: "var(--text-heading)" }}>طريقة الدفع</h2>
           </div>
-          <div className="flex items-center gap-4 p-4 rounded-xl"
-            style={{ border: "2px solid #6c4dff", background: "linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%)" }}>
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#ede9fe" }}>
-              <Truck size={22} style={{ color: "#6c4dff" }} />
-            </div>
-            <div className="flex-1">
-              <p className="font-black text-sm" style={{ color: "var(--text-heading)" }}>الدفع عند الاستلام</p>
-              <p className="text-xs mt-0.5" style={{ color: "var(--text-para)" }}>ادفع نقداً عند استلام طلبك بأمان تام</p>
-            </div>
-            <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" style={{ borderColor: "#6c4dff" }}>
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#6c4dff" }} />
-            </div>
+          <div className="flex flex-col gap-3">
+            {/* الدفع عند الاستلام */}
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, paymentMethod: "cod" }))}
+              className="flex items-center gap-4 p-4 rounded-xl w-full text-right transition-all"
+              style={{
+                border: `2px solid ${form.paymentMethod === "cod" ? "#6c4dff" : "var(--border)"}`,
+                background: form.paymentMethod === "cod" ? "linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%)" : "#fafbff",
+              }}
+            >
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: form.paymentMethod === "cod" ? "#ede9fe" : "#f3f4f6" }}>
+                <Truck size={22} style={{ color: form.paymentMethod === "cod" ? "#6c4dff" : "#9ca3af" }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-black text-sm" style={{ color: "var(--text-heading)" }}>الدفع عند الاستلام</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-para)" }}>ادفع نقداً عند استلام طلبك بأمان تام</p>
+              </div>
+              <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+                style={{ borderColor: form.paymentMethod === "cod" ? "#6c4dff" : "#d1d5db" }}>
+                {form.paymentMethod === "cod" && <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#6c4dff" }} />}
+              </div>
+            </button>
+
+            {/* الدفع من المحفظة */}
+            <button
+              type="button"
+              onClick={() => setForm(f => ({ ...f, paymentMethod: "wallet" }))}
+              className="flex items-center gap-4 p-4 rounded-xl w-full text-right transition-all"
+              style={{
+                border: `2px solid ${form.paymentMethod === "wallet" ? "#059669" : "var(--border)"}`,
+                background: form.paymentMethod === "wallet" ? "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" : "#fafbff",
+              }}
+            >
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: form.paymentMethod === "wallet" ? "#d1fae5" : "#f3f4f6" }}>
+                <Wallet size={22} style={{ color: form.paymentMethod === "wallet" ? "#059669" : "#9ca3af" }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-black text-sm" style={{ color: "var(--text-heading)" }}>الدفع من المحفظة</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-para)" }}>ادفع فوراً من رصيد محفظتك</p>
+              </div>
+              <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+                style={{ borderColor: form.paymentMethod === "wallet" ? "#059669" : "#d1d5db" }}>
+                {form.paymentMethod === "wallet" && <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#059669" }} />}
+              </div>
+            </button>
           </div>
         </div>
       </div>

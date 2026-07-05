@@ -14,4 +14,5 @@ export interface FormData {
   street: string;
   buildingNo: string;
   notes: string;
+  paymentMethod: "cod" | "wallet";
 }

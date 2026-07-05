@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import { OrderResult, FormData } from "./types";
+import { translateError } from "../utils/apiErrors";
 import CheckoutForm from "./CheckoutForm";
 import CheckoutSuccess from "./CheckoutSuccess";
 
@@ -29,13 +30,18 @@ export default function CheckoutPage() {
     street: "",
     buildingNo: "",
     notes: "",
+    paymentMethod: "cod",
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
 
   const itemsCount = items.reduce((s, i) => s + i.qty, 0);
 
-  if (!user || !token) { router.replace("/login?returnUrl=/checkout"); return null; }
-  if (items.length === 0 && step === 1) { router.replace("/cart"); return null; }
+  useEffect(() => {
+    if (!user || !token) { router.replace("/login?returnUrl=/checkout"); }
+    else if (items.length === 0 && step === 1) { router.replace("/cart"); }
+  }, [user, token, items.length, step]);
+
+  if (!user || !token || (items.length === 0 && step === 1)) return null;
 
   function validate() {
     const e: Partial<FormData> = {};
@@ -68,9 +74,9 @@ export default function CheckoutPage() {
           const res = await fetch(`${API}/api/orders`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ productId: item.productId }),
+            body: JSON.stringify({ productId: item.productId, paymentMethod: form.paymentMethod }),
           });
-          if (!res.ok) { const err = await res.json(); throw new Error(err.message || "فشل الشراء"); }
+          if (!res.ok) { const err = await res.json(); throw new Error(translateError(err.message) || "فشل الشراء"); }
           const data = await res.json();
           collected.push({
             productTitle: item.title,
@@ -85,7 +91,7 @@ export default function CheckoutPage() {
       setResults(collected);
       setStep(2);
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "حدث خطأ");
+      toast.error(err instanceof Error ? translateError(err.message) : "حدث خطأ");
     } finally {
       setPlacing(false);
     }
@@ -111,7 +117,7 @@ export default function CheckoutPage() {
                   {step === 1 ? "إتمام الطلب" : "تم الطلب بنجاح 🎉"}
                 </h1>
                 <p className="text-xs" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  {step === 1 ? `${itemsCount} منتج · الدفع عند الاستلام` : "شكراً لثقتك بنا"}
+                  {step === 1 ? `${itemsCount} منتج · ${form.paymentMethod === "wallet" ? "الدفع من المحفظة" : "الدفع عند الاستلام"}` : "شكراً لثقتك بنا"}
                 </p>
               </div>
             </div>
