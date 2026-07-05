@@ -69,7 +69,8 @@ function AuthPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!regForm.name || !regForm.email || !regForm.password) return toast.error("أدخل البيانات المطلوبة");
-    if (regForm.password.length < 6) return toast.error("كلمة المرور 6 أحرف على الأقل");
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(regForm.password))
+      return toast.error("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل وتشمل حرف كبير وصغير ورقم");
     setLoading(true);
     try {
       const res = await fetch(`${API}/api/auth/register`, {
