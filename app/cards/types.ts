@@ -9,7 +9,7 @@ export interface Brand {
 export const BRANDS: Brand[] = [
   { name: "Noon",        logo: "/noon-2.webp",       color: "#FEEE00", textColor: "#1a1a1a", keywords: ["noon", "نون"] },
   { name: "Amazon",      logo: "/logo-amazon.webp",   color: "#FF9900", textColor: "#fff",    keywords: ["amazon", "امازون", "أمازون"] },
-  { name: "Google Play", logo: "/gp.png",             color: "#01875f", textColor: "#fff",    keywords: ["google", "play", "جوجل"] },
+  { name: "Google Play", logo: "/gp.png",             color: "#01875f", textColor: "#fff",    keywords: ["google play", "google", "جوجل بلاي", "جوجل"] },
   { name: "PUBG",        logo: "/dddd.webp",          color: "#F5A623", textColor: "#1a1a1a", keywords: ["pubg", "ببجي"] },
   { name: "iTunes",      logo: "/apple-itunes.webp",  color: "#FC3C44", textColor: "#fff",    keywords: ["itunes", "apple", "ايتونز", "ابل"] },
   { name: "Steam",       logo: "/steam.png",          color: "#1b2838", textColor: "#fff",    keywords: ["steam", "ستيم"] },
