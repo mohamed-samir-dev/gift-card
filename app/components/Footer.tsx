@@ -17,12 +17,12 @@ const quickLinks = [
 ];
 
 const categories = [
-  { label: "بطاقات نون", href: "/cards" },
-  { label: "بطاقات أمازون", href: "/cards" },
-  { label: "جوجل بلاي", href: "/cards" },
-  { label: "iTunes & App Store", href: "/cards" },
-  { label: "PUBG Mobile", href: "/cards" },
-  { label: "Steam", href: "/cards" },
+  { label: "بطاقات نون", href: "/cards?brand=Noon" },
+  { label: "بطاقات أمازون", href: "/cards?brand=Amazon" },
+  { label: "جوجل بلاي", href: "/cards?brand=Google+Play" },
+  { label: "iTunes & App Store", href: "/cards?brand=iTunes" },
+  { label: "PUBG Mobile", href: "/cards?brand=PUBG" },
+  { label: "Steam", href: "/cards?brand=Steam" },
 ];
 
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import HeroSection from "./HeroSection";
 import FiltersBar from "./FiltersBar";
 import CardsGrid from "./CardsGrid";
@@ -12,9 +13,18 @@ interface CardsClientProps {
 }
 
 export default function CardsClient({ initialProducts, initialCategories }: CardsClientProps) {
+  const searchParams = useSearchParams();
   const [selectedCat, setSelectedCat] = useState("all");
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+
+  useEffect(() => {
+    const brand = searchParams.get("brand");
+    if (brand) {
+      const matched = BRANDS.find((b) => b.name.toLowerCase() === brand.toLowerCase());
+      if (matched) setSelectedBrand(matched.name);
+    }
+  }, [searchParams]);
   const [currentPage, setCurrentPage] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 

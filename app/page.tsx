@@ -6,11 +6,11 @@ import PaymentSection from "./components/PaymentSection";
 
 async function getFeaturedProducts() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?featured=true`, {
       next: { revalidate: 60 },
     });
     const data = await res.json();
-    return Array.isArray(data) ? data.slice(0, 6) : [];
+    return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }

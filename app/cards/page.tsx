@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CardsClient from "./components/CardsClient";
 import { Product, Category } from "./types";
 
@@ -20,5 +21,9 @@ async function getData(): Promise<{ products: Product[]; categories: Category[] 
 
 export default async function CardsPage() {
   const { products, categories } = await getData();
-  return <CardsClient initialProducts={products} initialCategories={categories} />;
+  return (
+    <Suspense>
+      <CardsClient initialProducts={products} initialCategories={categories} />
+    </Suspense>
+  );
 }
