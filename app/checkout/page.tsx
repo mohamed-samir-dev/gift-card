@@ -90,6 +90,7 @@ export default function CheckoutPage() {
       clearCart();
       setResults(collected);
       setStep(2);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: unknown) {
       toast.error(err instanceof Error ? translateError(err.message) : "حدث خطأ");
     } finally {
