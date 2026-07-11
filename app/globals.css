@@ -59,25 +59,80 @@ body {
 @media print {
   color-scheme: light;
 
-  body > *:not(#receipt-area),
-  header, nav, footer,
-  .no-print {
-    display: none !important;
+  body * {
+    visibility: hidden;
   }
 
-  #receipt-area {
-    display: block !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  #print-receipt, #print-receipt * {
+    visibility: visible;
   }
 
-  .print-only-date {
-    display: block;
+  #print-receipt {
+    position: fixed;
+    inset: 0;
+    padding: 32px;
+    font-family: "Tajawal", sans-serif;
+    direction: rtl;
+    background: #fff;
+    color: #111;
   }
 
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+  #print-receipt .print-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+  }
+
+  #print-receipt .print-label {
+    color: #666;
+  }
+
+  #print-receipt .print-value {
+    font-weight: 700;
+    color: #111;
+  }
+
+  #print-receipt .print-section-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #6c4dff;
+    margin: 14px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #6c4dff;
+  }
+
+  #print-receipt .print-pin {
+    font-size: 18px;
+    font-weight: 900;
+    color: #16a34a;
+    letter-spacing: 2px;
+  }
+
+  #print-receipt .print-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #111;
+  }
+
+  #print-receipt .print-header h1 {
+    font-size: 20px;
+    font-weight: 900;
+    margin: 0 0 4px;
+  }
+
+  #print-receipt .print-header p {
+    font-size: 11px;
+    color: #666;
+    margin: 0;
+  }
+
+  #print-receipt .print-footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 11px;
+    color: #999;
   }
 }
