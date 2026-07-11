@@ -103,13 +103,6 @@ body {
     border-bottom: 2px solid #6c4dff;
   }
 
-  #print-receipt .print-pin {
-    font-size: 18px;
-    font-weight: 900;
-    color: #16a34a;
-    letter-spacing: 2px;
-  }
-
   #print-receipt .print-header {
     text-align: center;
     margin-bottom: 20px;

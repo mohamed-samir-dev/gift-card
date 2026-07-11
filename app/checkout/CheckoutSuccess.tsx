@@ -34,23 +34,20 @@ export default function CheckoutSuccess({ results, form }: Props) {
       {/* رسيت الطباعة - مخفي على الشاشة */}
       <div id="print-receipt" style={{ display: "none" }}>
         <div className="print-header">
-          <h1>إيصال الطلب</h1>
+          <h1>✓ تم تأكيد الطلب</h1>
           <p>{orderDate}</p>
         </div>
 
         <div className="print-section-title">بيانات العميل</div>
         <div className="print-row"><span className="print-label">الاسم</span><span className="print-value">{form.fullName}</span></div>
         <div className="print-row"><span className="print-label">الجوال</span><span className="print-value">{form.phone}</span></div>
-        {form.city && <div className="print-row"><span className="print-label">المدينة</span><span className="print-value">{[form.street, form.district, form.city].filter(Boolean).join("، ")}</span></div>}
         <div className="print-row"><span className="print-label">طريقة الدفع</span><span className="print-value">{form.paymentMethod === "wallet" ? "المحفظة" : "عند الاستلام"}</span></div>
 
+        <div className="print-section-title">تفاصيل الطلب</div>
         {results.map((r, idx) => (
-          <div key={idx}>
-            <div className="print-section-title">{r.productTitle}</div>
-            {r.cardNumber && <div className="print-row"><span className="print-label">رقم البطاقة</span><span className="print-value">{r.cardNumber}</span></div>}
-            {r.serial && <div className="print-row"><span className="print-label">السيريال</span><span className="print-value">{r.serial}</span></div>}
-            {r.pin && <div className="print-row"><span className="print-label">الـ PIN</span><span className="print-value print-pin">{r.pin}</span></div>}
-            <div className="print-row"><span className="print-label">المبلغ</span><span className="print-value">{r.total.toFixed(2)} ر.س</span></div>
+          <div className="print-row" key={idx}>
+            <span className="print-label">{r.productTitle}</span>
+            <span className="print-value">{r.total.toFixed(2)} ر.س</span>
           </div>
         ))}
 
