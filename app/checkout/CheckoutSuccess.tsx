@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, MapPin, Zap, Copy, Check, Printer } from "lucide-react";
+import { CheckCircle2, MapPin, Zap, Copy, Check } from "lucide-react";
 import { OrderResult, FormData } from "./types";
 
 interface Props {
@@ -14,14 +14,6 @@ export default function CheckoutSuccess({ results, form }: Props) {
   const router = useRouter();
   const [copied, setCopied] = useState<string | null>(null);
 
-  const orderDate = new Date().toLocaleString("ar-SA", { dateStyle: "full", timeStyle: "short" });
-
-  const totalAll = results.reduce((s, r) => s + r.total, 0);
-
-  function printReceipt() {
-    window.print();
-  }
-
   function copyText(text: string, key: string) {
     navigator.clipboard.writeText(text);
     setCopied(key);
@@ -29,35 +21,7 @@ export default function CheckoutSuccess({ results, form }: Props) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-10 flex flex-col gap-4 sm:gap-6" id="receipt-area">
-
-      {/* رسيت الطباعة - مخفي على الشاشة */}
-      <div id="print-receipt" style={{ display: "none" }}>
-        <div className="print-header">
-          <h1>✓ تم تأكيد الطلب</h1>
-          <p>{orderDate}</p>
-        </div>
-
-        <div className="print-section-title">بيانات العميل</div>
-        <div className="print-row"><span className="print-label">الاسم</span><span className="print-value">{form.fullName}</span></div>
-        <div className="print-row"><span className="print-label">الجوال</span><span className="print-value">{form.phone}</span></div>
-        <div className="print-row"><span className="print-label">طريقة الدفع</span><span className="print-value">{form.paymentMethod === "wallet" ? "المحفظة" : "عند الاستلام"}</span></div>
-
-        <div className="print-section-title">تفاصيل الطلب</div>
-        {results.map((r, idx) => (
-          <div className="print-row" key={idx}>
-            <span className="print-label">{r.productTitle}</span>
-            <span className="print-value">{r.total.toFixed(2)} ر.س</span>
-          </div>
-        ))}
-
-        <div className="print-row" style={{ marginTop: 8, borderTop: "2px solid #111", fontWeight: 900 }}>
-          <span>الإجمالي</span>
-          <span>{totalAll.toFixed(2)} ر.س</span>
-        </div>
-
-        <div className="print-footer">احتفظ بهذا الإيصال كدليل على عملية الشراء</div>
-      </div>
+    <div className="max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-10 flex flex-col gap-4 sm:gap-6">
 
       {/* Success Banner */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-3"
@@ -67,7 +31,6 @@ export default function CheckoutSuccess({ results, form }: Props) {
         </div>
         <h2 className="text-2xl font-black" style={{ color: "var(--text-heading)" }}>تم تأكيد طلبك!</h2>
         <p className="text-sm" style={{ color: "var(--text-para)" }}>سيتم التواصل معك قريباً لتأكيد موعد التوصيل</p>
-        <p className="text-xs print-only-date" style={{ color: "var(--text-light)" }}>{orderDate}</p>
       </div>
 
       {/* بيانات التوصيل */}
@@ -140,20 +103,9 @@ export default function CheckoutSuccess({ results, form }: Props) {
         </div>
       ))}
 
-      {/* أزرار */}
-      <div className="flex flex-col sm:flex-row gap-3 no-print">
-        <button
-          onClick={printReceipt}
-          className="flex-1 flex items-center justify-center gap-2 font-black py-4 rounded-2xl border-2 transition-all hover:opacity-80"
-          style={{ borderColor: "var(--primary)", color: "var(--primary)", background: "#f5f3ff" }}
-        >
-          <Printer size={18} />
-          طباعة الرسيت
-        </button>
-        <button onClick={() => router.push("/")} className="btn-gradient flex-1 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2">
-          العودة للرئيسية
-        </button>
-      </div>
+      <button onClick={() => router.push("/")} className="btn-gradient w-full text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2">
+        العودة للرئيسية
+      </button>
     </div>
   );
 }
