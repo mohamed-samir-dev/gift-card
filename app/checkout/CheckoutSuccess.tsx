@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, MapPin, Zap, Copy, Check } from "lucide-react";
+import { CheckCircle2, MapPin, Zap, Copy, Check, Printer } from "lucide-react";
 import { OrderResult, FormData } from "./types";
 
 interface Props {
@@ -14,6 +14,12 @@ export default function CheckoutSuccess({ results, form }: Props) {
   const router = useRouter();
   const [copied, setCopied] = useState<string | null>(null);
 
+  const orderDate = new Date().toLocaleString("ar-SA", { dateStyle: "full", timeStyle: "short" });
+
+  function printReceipt() {
+    window.print();
+  }
+
   function copyText(text: string, key: string) {
     navigator.clipboard.writeText(text);
     setCopied(key);
@@ -21,7 +27,7 @@ export default function CheckoutSuccess({ results, form }: Props) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-10 flex flex-col gap-4 sm:gap-6">
+    <div className="max-w-2xl mx-auto px-3 sm:px-4 py-6 sm:py-10 flex flex-col gap-4 sm:gap-6" id="receipt-area">
 
       {/* Success Banner */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center gap-3"
@@ -31,6 +37,7 @@ export default function CheckoutSuccess({ results, form }: Props) {
         </div>
         <h2 className="text-2xl font-black" style={{ color: "var(--text-heading)" }}>تم تأكيد طلبك!</h2>
         <p className="text-sm" style={{ color: "var(--text-para)" }}>سيتم التواصل معك قريباً لتأكيد موعد التوصيل</p>
+        <p className="text-xs print-only-date" style={{ color: "var(--text-light)" }}>{orderDate}</p>
       </div>
 
       {/* بيانات التوصيل */}
@@ -103,9 +110,20 @@ export default function CheckoutSuccess({ results, form }: Props) {
         </div>
       ))}
 
-      <button onClick={() => router.push("/")} className="btn-gradient w-full text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2">
-        العودة للرئيسية
-      </button>
+      {/* أزرار */}
+      <div className="flex flex-col sm:flex-row gap-3 no-print">
+        <button
+          onClick={printReceipt}
+          className="flex-1 flex items-center justify-center gap-2 font-black py-4 rounded-2xl border-2 transition-all hover:opacity-80"
+          style={{ borderColor: "var(--primary)", color: "var(--primary)", background: "#f5f3ff" }}
+        >
+          <Printer size={18} />
+          طباعة الرسيت
+        </button>
+        <button onClick={() => router.push("/")} className="btn-gradient flex-1 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2">
+          العودة للرئيسية
+        </button>
+      </div>
     </div>
   );
 }
