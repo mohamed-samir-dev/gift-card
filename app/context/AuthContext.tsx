@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "./CartContext";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -22,6 +23,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const { loadUserCart, resetCartState } = useCart();
   const initializedRef = useRef(false);
+  const router = useRouter();
+
+  const logout = (blocked = false) => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setToken(null);
+    setUser(null);
+    resetCartState();
+    if (blocked) router.push("/blocked");
+  };
 
   // Load from localStorage on mount and restore cart from DB
   useEffect(() => {
@@ -37,6 +48,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, [loadUserCart]);
 
+  // Poll every 30s to detect block
+  useEffect(() => {
+    if (!token) return;
+    const check = async () => {
+      try {
+        const res = await fetch(`${API}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
+        if (res.status === 401 || res.status === 403) logout(true);
+      } catch { /* network error - ignore */ }
+    };
+    const id = setInterval(check, 30_000);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
   const login = async (newToken: string, newUser: AuthUser) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("user", JSON.stringify(newUser));
@@ -45,16 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await loadUserCart(newToken);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
-    resetCartState();
-  };
-
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, logout: () => logout(false), isLoading }}>
       {children}
     </AuthContext.Provider>
   );
