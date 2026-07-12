@@ -55,10 +55,13 @@ function AuthPage() {
         body: JSON.stringify(loginForm),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "خطأ في تسجيل الدخول");
-      login(data.token, data.user);
+      if (!res.ok) {
+        if (res.status === 429) return toast.error(data.message, { duration: 6000, icon: "🔒" });
+        throw new Error(data.message || "خطأ في تسجيل الدخول");
+      }
+      await login(data.token, data.user);
       toast.success(`أهلاً ${data.user.name} 👋`);
-      router.push(returnUrl);
+      router.push(data.user.role === 'admin' ? '/admin' : returnUrl);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "حدث خطأ");
     } finally {
