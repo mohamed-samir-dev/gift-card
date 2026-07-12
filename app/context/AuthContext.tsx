@@ -54,7 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const check = async () => {
       try {
         const res = await fetch(`${API}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
-        if (res.status === 401 || res.status === 403) logout(true);
+        if (res.status === 403) logout(true);
+        else if (res.status === 401) logout(false);
       } catch { /* network error - ignore */ }
     };
     const id = setInterval(check, 30_000);

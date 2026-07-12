@@ -57,6 +57,7 @@ function AuthPage() {
       const data = await res.json();
       if (!res.ok) {
         if (res.status === 429) return toast.error(data.message, { duration: 6000, icon: "🔒" });
+        if (res.status === 403) { router.push("/blocked"); return; }
         throw new Error(data.message || "خطأ في تسجيل الدخول");
       }
       await login(data.token, data.user);
