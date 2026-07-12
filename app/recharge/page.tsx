@@ -37,8 +37,8 @@ export default function RechargePage() {
   useEffect(() => {
     if (!token) return;
     fetch(`${API}/api/wallets`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(setWallet)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.balance !== undefined) setWallet(data); })
       .catch(() => {});
   }, [token]);
 

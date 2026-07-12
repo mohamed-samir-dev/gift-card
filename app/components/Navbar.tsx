@@ -21,6 +21,17 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // إذا الأدمن فتح الموقع من لوحة التحكم
+  const [adminUser, setAdminUser] = useState<{ name: string; email: string; role: string } | null>(null);
+  useEffect(() => {
+    if (!user) {
+      const saved = localStorage.getItem("adminUser");
+      if (saved) setAdminUser(JSON.parse(saved));
+    }
+  }, [user]);
+
+  const activeUser = user || adminUser;
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
@@ -101,7 +112,7 @@ export default function Navbar() {
             )}
           </Link>
           <div className="w-px h-5 mx-1" style={{ background: "var(--border)" }} />
-          {user ? (
+          {activeUser ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -109,9 +120,9 @@ export default function Navbar() {
                 style={{ color: "var(--text-heading)" }}
               >
                 <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-black" style={{ background: "var(--gradient)" }}>
-                  {user.name.charAt(0)}
+                  {activeUser.name.charAt(0)}
                 </div>
-                <span className="text-sm font-bold max-w-[90px] truncate">{user.name}</span>
+                <span className="text-sm font-bold max-w-[90px] truncate">{activeUser.name}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
               </button>
               {dropdownOpen && (
@@ -120,9 +131,14 @@ export default function Navbar() {
                   style={{ background: "#fff", boxShadow: "0 8px 32px rgba(108,77,255,0.15)", border: "1px solid var(--border)" }}
                 >
                   <div className="px-4 py-2 border-b" style={{ borderColor: "var(--border)" }}>
-                    <p className="text-xs font-black truncate" style={{ color: "var(--text-heading)" }}>{user.name}</p>
-                    <p className="text-[11px] truncate" style={{ color: "var(--text-para)" }}>{user.email}</p>
+                    <p className="text-xs font-black truncate" style={{ color: "var(--text-heading)" }}>{activeUser.name}</p>
+                    <p className="text-[11px] truncate" style={{ color: "var(--text-para)" }}>{activeUser.email}</p>
                   </div>
+                  {activeUser.role === 'admin' ? (
+                    <Link href="/admin" className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-[#6c4dff] hover:bg-[#f3f0ff] transition-colors">
+                      لوحة التحكم
+                    </Link>
+                  ) : null}
                   <button
                     onClick={() => { logout(); setDropdownOpen(false); }}
                     className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
@@ -198,15 +214,15 @@ export default function Navbar() {
             </Link>
           </div>
           <hr className="my-2" style={{ borderColor: "var(--border)" }} />
-          {user ? (
+          {activeUser ? (
             <div className="flex items-center justify-between px-3 py-2 rounded-xl" style={{ background: "#f3f0ff" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-black" style={{ background: "var(--gradient)" }}>
-                  {user.name.charAt(0)}
+                  {activeUser.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-xs font-black" style={{ color: "var(--text-heading)" }}>{user.name}</p>
-                  <p className="text-[10px]" style={{ color: "var(--text-para)" }}>{user.email}</p>
+                  <p className="text-xs font-black" style={{ color: "var(--text-heading)" }}>{activeUser.name}</p>
+                  <p className="text-[10px]" style={{ color: "var(--text-para)" }}>{activeUser.email}</p>
                 </div>
               </div>
               <button

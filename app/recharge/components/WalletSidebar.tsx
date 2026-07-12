@@ -73,8 +73,8 @@ export default function WalletSidebar({ user, wallet, token }: Props) {
     fetch(`${API}/api/wallets/transactions`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(r => r.json())
-      .then(setTransactions)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setTransactions(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setFetching(false));
   }, [showModal, token]);
